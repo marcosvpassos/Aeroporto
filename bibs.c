@@ -9,7 +9,8 @@ typedef struct pista{
     aviao *head;
     struct pista* prox;
 }pista;
-
+//*****************************************
+//FUNÇÕES NO AEROPORTO
 void addfPista(pista** a){
 	if(!(*a)){
         *a=(pista*)malloc(sizeof(pista));
@@ -149,6 +150,67 @@ void imprime(pista* a){
         i++;
 
     }while(a!=ult);
+    printf("\e[0m");
+    return;
+}
+
+//*****************************************************************
+//FUNÇÕES NO VOO
+void addV(aviao** a,aviao info){
+    aviao* ult=*a;
+    aviao* novo=malloc(sizeof(aviao));
+    // adiciona o avião
+	if(!ult){
+		novo->prox=novo;
+        *a=novo;
+	}
+    else {
+		novo->prox=ult->prox;
+        ult->prox=novo;
+        *a=novo;
+    }
+		novo->x=(info.x);novo->y=(info.y);novo->z=(info.z);
+	return;
+}
+
+void delV(aviao** a){
+    if(!*a)return;
+
+//deletar avioes
+    aviao* prim=(*a)->prox;
+    if((*a)==prim){     //caso só tenha 1 aviao
+        free(*a);
+        (*a)=NULL;
+        return;
+    }                   //caso tenha mais
+    (*a)->prox=prim->prox;
+    free(prim);
+    return;
+}
+
+aviao* infoV(aviao* a,int posA){//devolve aviao para ver informacoes
+    if(posA<0||!a)return NULL;
+    aviao* ult=a;
+    aviao* prim=a->prox;
+    int i;
+
+    for(i=0;i<posA;i++){
+        if(ult==prim)return NULL;
+    	prim=prim->prox;
+    }
+    return prim;
+}
+
+void imprimeV(aviao* avi){
+    printf("\e[1;32mVoando:\n");
+    if(!avi){printf("Nenhum!\e[0m\n");return;}
+    aviao* ult=avi;
+
+    do{
+        avi=avi->prox;
+        printf("%d %d %d\n",avi->x,avi->y,avi->z);
+    }while(avi!=ult);
+
     printf("\e[0m");
     return;
 }
