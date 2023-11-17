@@ -84,29 +84,27 @@ void delPista(pista** b,int n){//não deleta o ultimo
     return;
 }
 
-aviao delAviao(pista** a,int n){
-    aviao nulo;nulo.x=0;nulo.y=0;nulo.z=0;
-    if(!*a||n<0)return nulo;
+void delAviao(pista** a,int n){
+    if(!*a||n<0)return;
     int i;
     pista* ult=*a;//ultima pista
 
     a=&((*a)->prox);
     for(i=0;i<n;i++){//achar pista correta
-        if((ult==(*a)))return nulo;
+        if((ult==(*a)))return;
         a=&((*a)->prox);
     }
-    if(!(*a)->head)return nulo;//verificar se há avioes
+    if(!(*a)->head)return;//verificar se há avioes
 //deletar avioes
     aviao* prim=((*a)->head)->prox;
-    aviao info=*prim;
     if((*a)->head==prim){//caso só tenha 1 aviao
         free((*a)->head);
         (*a)->head=NULL;
-        return info;
+        return;
     }//caso tenha mais
     ((*a)->head)->prox=prim->prox;
     free(prim);
-    return info;
+    return;
 }
 
 aviao* info(pista* a,int n,int posA){//devolve aviao para ver informacoes
