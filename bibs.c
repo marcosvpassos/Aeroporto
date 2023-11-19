@@ -1,216 +1,193 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 typedef struct aviao{
-    int x,y,z;
+    int codigo;
+    char modelo[10];
+    char destino[10];
+    int distancia;
+    int tempo_de_voo;
+    int x;
+    int y;
+    int z;
+    int velocidade;
+    int estado;
+    
     struct aviao* prox;
 
 }aviao;
+
 typedef struct pista{
     aviao *head;
     struct pista* prox;
 }pista;
+
+void criar_pista(pista** a);
+void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo);
+void del_pista(pista** a,int pos);
+void rem_from_pista(pista** a,int pos);
+void imprime_pista(pista* a);
+void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo);
+void del_aviao(aviao** a,int pos);
+void del_all_aviao(aviao** a);
+void del_all_pista(pista** a);
+void imprime_aviao(aviao* a);
+
 //*****************************************
-//FUNÇÕES NO AEROPORTO
-void addfPista(pista** a){
-	if(!(*a)){
-        *a=(pista*)malloc(sizeof(pista));
-		(*a)->prox=*a;
-		(*a)->head=NULL;
-        return;
+void criar_pista(pista** a){
+    pista* novo=malloc(sizeof(pista));
+	if(!*a){
+        *a=novo;
 	}
-		pista* ult=*a;
-		pista* novo=malloc(sizeof(pista));
-
-		novo->prox=ult->prox;
-		ult->prox=novo;
-		novo->head=NULL;
-		*a=novo;
-	return;
+    else{
+        while((*a)->prox){
+            a=&((*a)->prox);
+        }
+        (*a)->prox=novo;
+    }
+    novo->prox=NULL;
+    novo->head=NULL;
 }
 
-void addpin(pista** a,int pos){
-	if(!(*a))return;
-	int i;
-		pista *novo=malloc(sizeof(pista)),*ult=*a;
-		for(i=0;i<pos;i++){//achar pista correta
-			a=&((*a)->prox);
-			if(ult==*a)return;
-		}
-		novo->prox=(*a)->prox;
-		(*a)->prox=novo;
-		novo->head=NULL;
-	return;
-}
-
-void addfAviao(pista** a,int pos,aviao info){
+void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo){
     if(!(*a))return;
 	int i;
-    // entra na pista correta
-	pista *ult=*a;
-		for(i=0;i<=pos;i++){//achar pista correta
+		for(i=0;i<pos;i++){//achar pista correta
 			a=&((*a)->prox);
-			if((ult==*a)&&i!=pos)return;
+			if(!*a)return;
 		}
-    aviao* ultavi=(*a)->head;
-    aviao* novo=malloc(sizeof(aviao));
     // adiciona o avião
-	if(!ultavi){
-		novo->prox=novo;
-        (*a)->head=novo;
+    add_aviao(&((*a)->head), codigo, modelo, destino, distancia, tempo_de_voo);
+}
+
+void del_pista(pista** a,int pos){
+    if(!*a||pos<0)return;
+    int i;
+    pista *aux;
+
+    for(i=0;i<pos;i++){//achar pista correta
+        a=&((*a)->prox);
+        if(!*a)return;
+    }
+    aux=*a;
+
+    if(aux->head)return;//se tiver aviões na pista
+
+    *a=aux->prox;//remover elemento
+    free(aux);
+}
+
+void rem_from_pista(pista** a,int pos){
+    if(!*a||pos<0)return;
+    int i;
+
+    for(i=0;i<pos;i++){//achar pista correta
+        a=&((*a)->prox);
+        if(!*a)return;
+    }
+  
+    if(!((*a)->head))return;//verificar se há aviao
+
+    del_aviao(&((*a)->head), 0);
+}
+
+void imprime_pista(pista* a){
+    printf("\e[1;32mAeroporto:\n");
+    if(!a){printf("vazio!\e[0m\n");return;}
+    int cont=0;
+
+    while(a){ 
+        printf("\e[1;32mPista %d:\n",cont+1);
+            imprime_aviao(a->head);
+        printf("\n");
+        cont++;a=a->prox;
+    }
+    printf("\e[0m");
+}
+
+void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo){
+    aviao *novo = malloc(sizeof(aviao));
+	if(!*a){
+		*a=novo;
 	}
     else {
-		novo->prox=ultavi->prox;
-        ultavi->prox=novo;
-        (*a)->head=novo;
-    }
-		novo->x=(info.x);novo->y=(info.y);novo->z=(info.z);
-	return;
-}
-
-void delPista(pista** b,int n){//não deleta o ultimo
-    if(!*b||n<0)return;
-    int i;
-    pista**a=b;
-    pista* res=*a,*ult=*a;
-    for(i=0;i<n;i++){//achar pista correta
-        a=&((*a)->prox);
-        if((*a)==ult)return;
-    }
-    res=(*a)->prox;
-    if(res->head)return;
-    if(res==(*a))*b=NULL;
-    if(res==ult)*b=(pista*)a;//problemas para incluir o ultimo, eu desisto
-    else (*a)->prox=res->prox;
-    free(res);
-    return;
-}
-
-void delAviao(pista** a,int n){
-    if(!*a||n<0)return;
-    int i;
-    pista* ult=*a;//ultima pista
-
-    a=&((*a)->prox);
-    for(i=0;i<n;i++){//achar pista correta
-        if((ult==(*a)))return;
-        a=&((*a)->prox);
-    }
-    if(!(*a)->head)return;//verificar se há avioes
-//deletar avioes
-    aviao* prim=((*a)->head)->prox;
-    if((*a)->head==prim){//caso só tenha 1 aviao
-        free((*a)->head);
-        (*a)->head=NULL;
-        return;
-    }//caso tenha mais
-    ((*a)->head)->prox=prim->prox;
-    free(prim);
-    return;
-}
-
-aviao* info(pista* a,int n,int posA){//devolve aviao para ver informacoes
-    if(n<0||posA<0||!a)return NULL;
-    pista* ult=a;
-    int i;
-
-    a=a->prox;
-    for(i=0;i<n;i++){
-        if(ult==a)return NULL;
-    	a=a->prox;
-    }
-    aviao* ultavi=a->head;
-    aviao* prim=ultavi->prox;
-
-    for(i=0;i<posA;i++){
-        if(ultavi==prim)return NULL;
-    	prim=prim->prox;
-    }
-
-    return prim;
-}
-
-void imprime(pista* a){
-    printf("\e[1;32mAeroporto:\n");
-    if(!a){printf("vazia!\e[0m\n");return;}
-    pista* ult=a;
-    int i=0;
-    do{
-        a=a->prox;
-        printf("Pista %d:\n",i+1);
-        if(a->head){
-            aviao* avi=a->head;
-            aviao* ultavi=a->head;
-            do{
-                avi=avi->prox;
-                printf("%d %d %d\n",avi->x,avi->y,avi->z);
-            }while(avi!=ultavi); 
+        while((*a)->prox){
+            a=&((*a)->prox);
         }
-        else printf("vazia!\n");
-        printf("\n");
-        i++;
-
-    }while(a!=ult);
-    printf("\e[0m");
-    return;
-}
-
-//*****************************************************************
-//FUNÇÕES NO VOO
-void addV(aviao** a,aviao info){  
-    while(*a!=NULL){//ultimo ponteiro
-        a=(aviao**)&((*a)->prox);
+		(*a)->prox=novo;
     }
-    *a=malloc(sizeof(aviao));//novo elemento
-    
-    (*a)->prox=NULL;
-    
-    (*a)->x=info.x;(*a)->y=info.y;(*a)->z=info.z;
-    return;
+        novo->prox=NULL;
+		novo->x=0;novo->y=0;novo->z=0;
+        novo->codigo=codigo;
+        strcpy(novo->modelo, modelo);
+        strcpy(novo->destino, destino);
+        novo->distancia=distancia;
+        novo->tempo_de_voo=tempo_de_voo;
+        novo->velocidade=0;
+        novo->estado=0;
 }
-void addinV(aviao** a,int n,aviao info){
-    if(!*a||n<0)return;
+
+void del_aviao(aviao** a, int pos){
+    if(!*a||pos<0)return;
     int i;
-    aviao* res;
-    for(i=0;i<n;i++){
-        if(!(*(a=&((*a)->prox))))return;
-    }
-    res=*a;
-    *a=malloc(sizeof(aviao));
-    (*a)->prox=res;
+    aviao* aux;
 
-    (*a)->x=info.x;(*a)->y=info.y;(*a)->z=info.z;
-    return;
+    for(i=0;i<pos;i++){//achar pista correta
+        a=&((*a)->prox);
+        if(!*a)return;
+    }
+    aux=*a;
+
+    *a=aux->prox;//remover elemento
+    free(aux);
 }
 
-aviao* infoV(aviao* a,int n){
-    if(n<0||!a)return 0;
-    int i;
-    for(i=0;i<n;i++){
-        if(!(a=a->prox))return 0;
-    }
-    return a;
-}
-
-void delV(aviao** a,int n){
-    if(!*a||n<0)return;
-    int i;
-    aviao* res;
-    for(i=0;i<n;i++){
-        if(!(*(a=&((*a)->prox))))return;
-    }
-    res=((*a)->prox);
+void del_all_aviao(aviao**a){
+    if(!*a)return;
+    aviao *aux=(*a)->prox,*aux1;
     free(*a);
-    *a=res;
-    return;
+    *a=NULL;
+
+    while (aux){
+        aux1=aux->prox;
+        free(aux);
+        aux=aux1;
+    }
 }
-void imprimeV(aviao* a){
-    printf("\e[1;32mLista Atual:\n");
+void del_all_pista(pista** a){
+    if(!*a)return;
+    pista *aux=(*a)->prox,*aux1;
+    del_all_aviao(&((*a)->head));
+    free(*a);
+    *a=NULL;
+
+    while (aux){
+        aux1=aux->prox;
+        del_all_aviao(&(aux->head));
+        free(aux);
+        aux=aux1;
+    }
+}
+
+void imprime_aviao(aviao* a){
+    printf("\e[1;32m");
     if(!a){printf("vazia!\e[0m\n");return;}
-    int i;
-    
-    for(i=0;a->prox;i++){
-        printf("%d %d %d\n",a->x,a->y,a->z);
+ 
+    for(;a;){
+        printf("%d ",a->codigo);
+        printf("%s ",a->modelo);
+        printf("%s ",a->destino);
+        printf("%d ",a->distancia);
+        printf("%d ",a->tempo_de_voo);
+        printf("%d ",a->x);
+        printf("%d ",a->y);
+        printf("%d ",a->z);
+        printf("%d ",a->velocidade);
+        printf("%d\n",a->estado);
+
         a=a->prox;
-    }printf("%d %d %d\e[0m\n",a->x,a->y,a->z);
+    }
+    printf("\e[0m");
     return;
 }
