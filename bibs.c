@@ -156,61 +156,61 @@ void imprime(pista* a){
 
 //*****************************************************************
 //FUNÇÕES NO VOO
-void addV(aviao** a,aviao info){
-    aviao* ult=*a;
-    aviao* novo=malloc(sizeof(aviao));
-    // adiciona o avião
-	if(!ult){
-		novo->prox=novo;
-        *a=novo;
-	}
-    else {
-		novo->prox=ult->prox;
-        ult->prox=novo;
-        *a=novo;
+void addV(aviao** a,aviao info){  
+    while(*a!=NULL){//ultimo ponteiro
+        a=(aviao**)&((*a)->prox);
     }
-		novo->x=(info.x);novo->y=(info.y);novo->z=(info.z);
-	return;
+    *a=malloc(sizeof(aviao));//novo elemento
+    
+    (*a)->prox=NULL;
+    
+    (*a)->x=info.x;(*a)->y=info.y;(*a)->z=info.z;
+    return;
 }
+void addinV(aviao** a,int n,aviao info){
+    if(!*a||n<0)return;
+    int i;
+    aviao* res;
+    for(i=0;i<n;i++){
+        if(!(*(a=&((*a)->prox))))return;
+    }
+    res=*a;
+    *a=malloc(sizeof(aviao));
+    (*a)->prox=res;
 
-void delV(aviao** a){
-    if(!*a)return;
-
-//deletar avioes
-    aviao* prim=(*a)->prox;
-    if((*a)==prim){     //caso só tenha 1 aviao
-        free(*a);
-        (*a)=NULL;
-        return;
-    }                   //caso tenha mais
-    (*a)->prox=prim->prox;
-    free(prim);
+    (*a)->x=info.x;(*a)->y=info.y;(*a)->z=info.z;
     return;
 }
 
-aviao* infoV(aviao* a,int posA){//devolve aviao para ver informacoes
-    if(posA<0||!a)return NULL;
-    aviao* ult=a;
-    aviao* prim=a->prox;
+aviao* infoV(aviao* a,int n){
+    if(n<0||!a)return 0;
     int i;
-
-    for(i=0;i<posA;i++){
-        if(ult==prim)return NULL;
-    	prim=prim->prox;
+    for(i=0;i<n;i++){
+        if(!(a=a->prox))return 0;
     }
-    return prim;
+    return a;
 }
 
-void imprimeV(aviao* avi){
-    printf("\e[1;32mVoando:\n");
-    if(!avi){printf("Nenhum!\e[0m\n");return;}
-    aviao* ult=avi;
-
-    do{
-        avi=avi->prox;
-        printf("%d %d %d\n",avi->x,avi->y,avi->z);
-    }while(avi!=ult);
-
-    printf("\e[0m");
+void delV(aviao** a,int n){
+    if(!*a||n<0)return;
+    int i;
+    aviao* res;
+    for(i=0;i<n;i++){
+        if(!(*(a=&((*a)->prox))))return;
+    }
+    res=((*a)->prox);
+    free(*a);
+    *a=res;
+    return;
+}
+void imprimeV(aviao* a){
+    printf("\e[1;32mLista Atual:\n");
+    if(!a){printf("vazia!\e[0m\n");return;}
+    int i;
+    
+    for(i=0;a->prox;i++){
+        printf("%d %d %d\n",a->x,a->y,a->z);
+        a=a->prox;
+    }printf("%d %d %d\e[0m\n",a->x,a->y,a->z);
     return;
 }
