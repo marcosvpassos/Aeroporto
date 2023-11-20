@@ -33,6 +33,9 @@ void del_aviao(aviao** a,int pos);
 void del_all_aviao(aviao** a);
 void del_all_pista(pista** a);
 void imprime_aviao(aviao* a);
+int tamanho_aviao(aviao* a);
+int tamanho_pista(pista* a);
+int tamanho_in_pista(pista* a);
 
 //*****************************************
 void criar_pista(pista** a){
