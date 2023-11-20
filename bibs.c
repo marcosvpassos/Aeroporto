@@ -191,3 +191,28 @@ void imprime_aviao(aviao* a){
     printf("\e[0m");
     return;
 }
+
+int tamanho_aviao(aviao* a){
+    int i;
+    for(i=0;a;i++){
+        a=a->prox;
+    }
+    return i;
+}
+
+int tamanho_pista(pista* a){
+    int i;
+    for(i=0;a;i++){
+        a=a->prox;
+    }
+    return i;
+}
+int tamanho_in_pista(pista* a){
+    int i;
+
+    for(i=0;a;){
+        i+=tamanho_aviao(a->head);
+        a=a->prox;
+    }
+    return i;
+}
