@@ -36,6 +36,8 @@ void imprime_aviao(aviao* a);
 int tamanho_aviao(aviao* a);
 int tamanho_pista(pista* a);
 int tamanho_in_pista(pista* a);
+aviao* info_Pista(pista* a,int posP,int posA);
+aviao* info(aviao* a,int pos);
 
 //*****************************************
 void criar_pista(pista** a){
@@ -218,4 +220,25 @@ int tamanho_in_pista(pista* a){
         a=a->prox;
     }
     return i;
+}
+
+aviao* info_Pista(pista* a,int posP,int posA){
+    if(!a||posP<0||posA<0)return NULL;
+    int i;
+    for(i=0;i<posP;i++){//achar pista
+        a = a->prox;
+        if(!a)return NULL;
+    }
+    return info(a->head,posA);
+
+}
+
+aviao* info(aviao* a,int pos){
+    if(!a||pos<0)return NULL;
+    int i;
+    for(i=0;i<pos;i++){//achar aviao
+        a = a->prox;
+        if(!a)return NULL;
+    }
+    return a;
 }
