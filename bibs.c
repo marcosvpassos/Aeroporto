@@ -24,7 +24,7 @@ typedef struct pista{
 }pista;
 
 void criar_pista(pista** a);
-void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_vooint velocidade,int estado);
+void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade,int estado);
 void del_pista(pista** a,int pos);
 void rem_from_pista(pista** a,int pos);
 void imprime_pista(pista* a);
@@ -55,7 +55,7 @@ void criar_pista(pista** a){
     novo->head=NULL;
 }
 
-void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int estado, int velocidade){
+void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade, int estado){
     if(!(*a))return;
 	int i;
 		for(i=0;i<pos;i++){//achar pista correta
@@ -63,7 +63,7 @@ void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], i
 			if(!*a)return;
 		}
     // adiciona o avião
-    add_aviao(&((*a)->head), codigo, modelo, destino, distancia, tempo_de_voo, estado, velocidade);
+    add_aviao(&((*a)->head), codigo, modelo, destino, distancia, tempo_de_voo, velocidade, estado);
 }
 
 void del_pista(pista** a,int pos){
@@ -111,7 +111,7 @@ void imprime_pista(pista* a){
     printf("\e[0m");
 }
 
-void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo,int velocidade,int estado){
+void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade, int estado){
     aviao *novo = malloc(sizeof(aviao));
 	if(!*a){
 		*a=novo;
