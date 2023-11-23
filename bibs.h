@@ -41,3 +41,4 @@ aviao* info(aviao* a, int pos);
 void pistas(pista** a,int n);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
 void fim(pista **aeroporto,aviao **voando);
+
