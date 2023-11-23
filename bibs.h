@@ -5,11 +5,13 @@ typedef struct aviao{
     char destino[10];
     int distancia;
     int tempo_de_voo;
-    int x;
-    int y;
-    int z;
-    int velocidade;
+    float x;
+    float y;
+    float z;
+    float velocidade;
     int estado;
+
+    int direcao;
     
     struct aviao* prox;
 
@@ -21,11 +23,11 @@ typedef struct pista{
 }pista;
 
 void criar_pista(pista** a);
-void add_to_pista(pista** a, int pos, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade, int estado);
+void add_to_pista(pista** a, int pos, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, float velocidade, int estado, int direcao);
 void del_pista(pista** a, int pos);
 void rem_from_pista(pista** a, int pos);
 void imprime_pista(pista* a);
-void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo,int velocidade, int estado);
+void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo,float velocidade, int estado, int direcao);
 void del_aviao(aviao** a, int pos);
 void del_all_aviao(aviao** a);
 void del_all_pista(pista** a);
@@ -38,3 +40,4 @@ aviao* info(aviao* a, int pos);
 
 void pistas(pista** a,int n);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
+void fim(pista **aeroporto,aviao **voando);
