@@ -39,6 +39,8 @@ int tamanho_in_pista(pista* a);
 aviao* info_Pista(pista* a, int posP, int posA);
 aviao* info(aviao* a, int pos);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
+void aterrissando(aviao **a, int i, int pos);
+
 
 //*****************************************
 void criar_pista(pista** a){
@@ -255,4 +257,34 @@ void decolar(pista** aeroporto, aviao** ceu, int pista) {
     a->estado = 2;
     add_aviao(&(*ceu), a->codigo, a->modelo, a->destino, a->distancia, a->tempo_de_voo, a->velocidade, a->estado);
     rem_from_pista(aeroporto, pista);
+}
+
+void aterrissando(aviao **a, int i, int pos){//i recebe o instante do avião
+    int  min,t, d;
+    float w, v, z;
+    if((!(*a))||((*a)->estado)!=2){ //verifica se o avião esta decolado
+        printf("\nNão há avião decolado."); 
+        return;//se não há avião no céu, não há avião decolado
+    }
+    aviao* ceu = info(*a, 0);
+    d=((ceu)->distancia)/10; //d receberá a distancia do avião d agora é 10% da distancia
+    t=(ceu)->tempo_de_voo;  
+        if((i*((ceu)->velocidade))<=((ceu)->distancia -d) && (i*((ceu)->velocidade))){//se a velocidade pelo tempo for igual a 10% da distancia, então          
+            ceu->distancia = d;//faltam apenas 10% do caminho a percorre
+            w=(float)d*60/(ceu->velocidade);//deslocamento pela velocidade em minutos
+            v=ceu->velocidade/w;//velocidade por minutos para diminuir gradualmente a velocidade
+            d=d/w;//diminui-se a distancia pelo tempo
+            z=ceu->z/w;
+            for( min=(int)w; min>=0;min--){
+                ceu->velocidade=ceu->velocidade-(int)v;
+                ceu->distancia=ceu->distancia-(int)d;
+                ceu->z = (ceu->z) -(int)z; 
+                if((ceu->distancia)<=100){
+                    ceu->estado=3;
+                     del_aviao(a, 0); //se libera o avião daqui
+                    
+
+                }
+            }
+        }
 }
