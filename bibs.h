@@ -36,3 +36,5 @@ int tamanho_in_pista(pista* a);
 aviao* info_Pista(pista* a, int posP, int posA);
 aviao* info(aviao* a, int pos);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
+void aterrissando(aviao **a, int i, int pos);
+
