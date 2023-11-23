@@ -41,6 +41,7 @@ int tamanho_pista(pista* a);
 int tamanho_in_pista(pista* a);
 aviao* info_Pista(pista* a, int posP, int posA);
 aviao* info(aviao* a, int pos);
+void aterrissando(aviao **a, int i, int pos);
 
 void pistas(pista** a,int n);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
@@ -281,4 +282,33 @@ void fim(pista **aeroporto,aviao **voando){
     del_all_pista(aeroporto);
     del_all_aviao(voando);
 
+}
+void aterrissando(aviao **a, int i, int pos){
+    int  min,t, d;
+    float w, v, z;
+    if((!(*a))||((*a)->estado)!=2){ //verifica se o avião esta decolado
+        printf("\nNão há avião decolado."); 
+        return;//se não há avião no céu, não há avião decolado
+    }
+    aviao* ceu = info(*a, 0);
+    d=((ceu)->distancia)/10; //d receberá a distancia do avião d agora é 10% da distancia
+    t=(ceu)->tempo_de_voo;  
+        if((i*((ceu)->velocidade))<=((ceu)->distancia -d) && (i*((ceu)->velocidade))){//se a velocidade pelo tempo for igual a 10% da distancia, então          
+            ceu->distancia = d;
+            w=(float)d*60/(ceu->velocidade);//deslocamento pela velocidade 
+            v=ceu->velocidade/w;//velocidade por horas pq o parametro é velocidade por horas
+            d=d/w;
+            z=ceu->z/w;
+            for( min=(int)w; min>=0;min--){
+                ceu->velocidade=ceu->velocidade-(int)v;
+                ceu->distancia=ceu->distancia-(int)d;
+                ceu->z = (ceu->z) -(int)z; 
+                if((ceu->distancia)<=100){
+                    ceu->estado=3;
+                     del_aviao(a, 0);
+                    
+
+                }
+            }
+        }
 }
