@@ -44,6 +44,7 @@ aviao* info(aviao* a, int pos);
 
 void pistas(pista** a,int n);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
+void fim(pista **aeroporto,aviao **voando);
 
 //*****************************************
 void criar_pista(pista** a){
@@ -274,4 +275,10 @@ void decolar(pista** aeroporto, aviao** ceu, int pista) {
     a->direcao = rand() % 360;
     add_aviao(ceu, a->codigo, a->modelo, a->destino, a->distancia, a->tempo_de_voo, a->velocidade, a->estado,a->direcao);
     rem_from_pista(aeroporto, pista);
+}
+
+void fim(pista **aeroporto,aviao **voando){
+    del_all_pista(aeroporto);
+    del_all_aviao(voando);
+
 }
