@@ -38,6 +38,8 @@ int tamanho_pista(pista* a);
 int tamanho_in_pista(pista* a);
 aviao* info_Pista(pista* a, int posP, int posA);
 aviao* info(aviao* a, int pos);
+
+void pistas(pista** a,int n);
 void decolar(pista** aeroporto, aviao** ceu, int pista);
 
 //*****************************************
@@ -244,15 +246,24 @@ aviao* info(aviao* a,int pos){
     return a;
 }
 
+void pistas(pista** a,int n){
+    int i;
+    for(i=0;i<n;i++){
+        criar_pista(a);
+    }
+}
+
 void decolar(pista** aeroporto, aviao** ceu, int pista) {
-    if (!(*aeroporto) || !(*aeroporto)->head) { // verifica se há aviões
+    if (!*aeroporto) { // verifica se há aviões
         printf("Nenhum aviao na pista\n");
         return;
     }
     // Adiciona o avião no céu e remove da pista especificada
     aviao* a = info_Pista(*aeroporto, pista, 0);
+    if(!a)return;//caso aviao nao exista
+
     a->velocidade = 260 + rand() % 60;
     a->estado = 2;
-    add_aviao(&(*ceu), a->codigo, a->modelo, a->destino, a->distancia, a->tempo_de_voo, a->velocidade, a->estado);
+    add_aviao(ceu, a->codigo, a->modelo, a->destino, a->distancia, a->tempo_de_voo, a->velocidade, a->estado);
     rem_from_pista(aeroporto, pista);
 }
