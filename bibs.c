@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct aviao{
     int codigo;
@@ -8,11 +9,13 @@ typedef struct aviao{
     char destino[10];
     int distancia;
     int tempo_de_voo;
-    int x;
-    int y;
-    int z;
-    int velocidade;
+    float x;
+    float y;
+    float z;
+    float velocidade;
     int estado;
+
+    int direcao;
     
     struct aviao* prox;
 
@@ -24,11 +27,11 @@ typedef struct pista{
 }pista;
 
 void criar_pista(pista** a);
-void add_to_pista(pista** a, int pos, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade, int estado);
+void add_to_pista(pista** a, int pos, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, float velocidade, int estado, int direcao);
 void del_pista(pista** a, int pos);
 void rem_from_pista(pista** a, int pos);
 void imprime_pista(pista* a);
-void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo,int velocidade, int estado);
+void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo,float velocidade, int estado, int direcao);
 void del_aviao(aviao** a, int pos);
 void del_all_aviao(aviao** a);
 void del_all_pista(pista** a);
@@ -58,7 +61,7 @@ void criar_pista(pista** a){
     novo->head=NULL;
 }
 
-void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade, int estado){
+void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, float velocidade, int estado, int direcao){
     if(!(*a))return;
 	int i;
 		for(i=0;i<pos;i++){//achar pista correta
@@ -66,7 +69,7 @@ void add_to_pista(pista** a,int pos,int codigo, char modelo[], char destino[], i
 			if(!*a)return;
 		}
     // adiciona o avião
-    add_aviao(&((*a)->head), codigo, modelo, destino, distancia, tempo_de_voo, velocidade, estado);
+    add_aviao(&((*a)->head), codigo, modelo, destino, distancia, tempo_de_voo, velocidade, estado, direcao);
 }
 
 void del_pista(pista** a,int pos){
@@ -114,7 +117,7 @@ void imprime_pista(pista* a){
     printf("\e[0m");
 }
 
-void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, int velocidade, int estado){
+void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distancia, int tempo_de_voo, float velocidade, int estado, int direcao){
     aviao *novo = malloc(sizeof(aviao));
 	if(!*a){
 		*a=novo;
@@ -134,6 +137,7 @@ void add_aviao(aviao** a, int codigo, char modelo[], char destino[], int distanc
         novo->tempo_de_voo=tempo_de_voo;
         novo->velocidade=velocidade;
         novo->estado=estado;
+        novo->direcao=direcao;
 }
 
 void del_aviao(aviao** a, int pos){
@@ -188,11 +192,12 @@ void imprime_aviao(aviao* a){
         printf("%s ",a->destino);
         printf("%d ",a->distancia);
         printf("%d ",a->tempo_de_voo);
-        printf("%d ",a->x);
-        printf("%d ",a->y);
-        printf("%d ",a->z);
-        printf("%d ",a->velocidade);
-        printf("%d\n",a->estado);
+        printf("%f ",a->x);
+        printf("%f ",a->y);
+        printf("%f ",a->z);
+        printf("%f ",a->velocidade);
+        printf("%d ",a->estado);
+        printf("%d \n",a->direcao);
 
         a=a->prox;
     }
@@ -254,6 +259,8 @@ void pistas(pista** a,int n){
 }
 
 void decolar(pista** aeroporto, aviao** ceu, int pista) {
+    srand(time(NULL));
+
     if (!*aeroporto) { // verifica se há aviões
         printf("Nenhum aviao na pista\n");
         return;
@@ -264,6 +271,7 @@ void decolar(pista** aeroporto, aviao** ceu, int pista) {
 
     a->velocidade = 260 + rand() % 60;
     a->estado = 2;
-    add_aviao(ceu, a->codigo, a->modelo, a->destino, a->distancia, a->tempo_de_voo, a->velocidade, a->estado);
+    a->direcao = rand() % 360;
+    add_aviao(ceu, a->codigo, a->modelo, a->destino, a->distancia, a->tempo_de_voo, a->velocidade, a->estado,a->direcao);
     rem_from_pista(aeroporto, pista);
 }
